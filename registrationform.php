@@ -21,80 +21,6 @@
     $usernameErr = $passwordErr = $fnameErr = $lnameErr = $genderErr = $dobErr = $religionErr = $phoneErr = $emailErr = "";
     $successMessage = $errorMessage = "";
     $flag = false;
-    if ($_SERVER['REQUEST_METHOD'] === "POST") {
-        $username = $_POST['userName'];
-        $password = $_POST['password'];
-        $position = $_POST['position'];
-
-        if (empty($username)) {
-            $userNameErr = "User name cannot be empty!";
-            $flag = true;
-        }
-        if (empty($password)) {
-            $passwordErr = "password cannot be empty!";
-            $flag = true;
-        }
-        if (empty($fname)) {
-            $fnameErr = "first name cannot be empty!";
-            $flag = true;
-        }
-        if (empty($lname)) {
-            $lnameErr = "last name cannot be empty!";
-            $flag = true;
-        }
-        if (empty($gender)) {
-            $genderErr = "gender cannot be empty!";
-            $flag = true;
-        }
-        if (empty($dob)) {
-            $dobErr = "date of birth cannot be empty!";
-            $flag = true;
-        }
-        if (empty($religion)) {
-            $religionErr = "religion cannot be empty!";
-            $flag = true;
-        }
-        if (empty($phone)) {
-            $phoneErr = "phone cannot be empty!";
-            $flag = true;
-        }
-        if (empty($email)) {
-            $emailErr = "email cannot be empty!";
-            $flag = true;
-        }
-
-        if (!$flag) {
-            if (strlen($username) > 10) {
-                $userNameErr = "Username cannot be more than 10 characters!";
-                $flag = true;
-            }
-            if (strlen($password) > 8) {
-                $passwordErr = "password cannot be more than 8 characters!";
-                $flag = true;
-            }
-            if (!$flag) {
-                $username = test_input($userName);
-                $password = test_input($password);
-                $fname = test_input($fname);
-                $lname = test_input($lname);
-                $gender = test_input($gender);
-                $dob = test_input($dob);
-                $religion = test_input($religion);
-                $phone = test_input($phone);
-                $email = test_input($email);
-
-
-                // $data = array("username" => $userName, "password" => $password, "position" => $position);
-                // $data_encode = json_encode($data);
-                $result1 = register($userName,  $position, $fname, $lname, $gender, $dob, $religion, $phone, $email); //write($data_encode);
-                if ($result1) {
-                    $successMessage = "Signup Successfully.";
-                } else {
-                    $errorMessage = "Error while signing up!";
-                }
-            }
-        }
-    }
 
     // function write($content)
     // {
@@ -112,7 +38,7 @@
         return $data;
     }
     ?>
-    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" name="registrationForm">
+    <form action="action.php" method="POST" name="registrationForm" onsubmit="submitForm(this); return false;">
         <fieldset>
             <legend>Basic Information</legend>
             <label for="fname">First Name:</label>
@@ -174,6 +100,29 @@
         </div>
 
     </form>
+
+    <script>
+        function check(val){
+            var name = val.name.value;
+            if (name === ""){
+                return true;
+            }
+        }
+        function submitForm (pForm){
+            var isValid = check(pForm);
+            if(isValid) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onload = function(){
+                    if (this.statuis === 200) {
+                        document.getElementById("t1").innerHTML = this.responseText;
+                    }
+                }
+                xhttp.open("POST", "action.php");
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("name" + pForm.name.value);
+            }
+        }
+    </script>
 
 </body>
 
